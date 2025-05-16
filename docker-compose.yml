@@ -1,0 +1,23 @@
+services:
+  vault:
+    image: hashicorp/vault:1.15
+    container_name: vault-dev
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_ADDR: http://127.0.0.1:8200
+    volumes:
+      - ./vault-data:/vault/file
+      - ./config/vault.hcl:/vault/config/vault.hcl
+      - ./config/config-policy.hcl:/vault/config/config-policy.hcl
+      - ./init.sh:/init.sh
+    entrypoint: >
+      sh -c "
+        apk add --no-cache curl jq &&
+        vault server -config=/vault/config/vault.hcl &
+        sleep 3 &&
+        /init.sh &&
+        tail -f /dev/null"
+    cap_add:
+      - IPC_LOCK
+    restart: unless-stopped
