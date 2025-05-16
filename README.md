@@ -34,6 +34,7 @@ To log in with a token, use the following command:
 ```bash
 vault auth login [token]
 ```
+- Token is automatically generated in ./vault-data/keys.txt
 
 ### Validate Authentication Methods
 
